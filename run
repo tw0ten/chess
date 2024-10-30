@@ -1,0 +1,5 @@
+#!/bin/sh
+cargo run -rp server
+cd client
+wasm-pack build --target web
+serve

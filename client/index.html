@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>chess</title>
+  </head>
+  <body>
+    <script type="module">
+      import init, { greet } from "/pkg/client.js";
+      init().then(() => {
+        greet("WebAssembly");
+      });
+    </script>
+  </body>
+</html>

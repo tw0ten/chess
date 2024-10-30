@@ -1,0 +1,6 @@
+[package]
+name = "server"
+edition = "2021"
+
+[dependencies]
+common = { path = "../common" }
