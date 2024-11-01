@@ -1,3 +1,5 @@
 use common::*;
 
-fn main() {}
+fn main() {
+    common::main();
+}

@@ -15,5 +15,6 @@ extern "C" {}
 #[wasm_bindgen(start)]
 fn main() -> Result<(), JsValue> {
     log("#[wasm_bindgen(start)]");
+    common::main();
     Ok(())
 }
