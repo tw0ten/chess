@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+cargo build -r -p server
+
+cd client
+wasm-pack build \
+	-t web --no-typescript --no-pack
+rm pkg/.gitignore

@@ -3,4 +3,6 @@ name = "server"
 edition = "2021"
 
 [dependencies]
+actix-web = "*"
+rand = "*"
 common = { path = "../common" }

@@ -1,7 +1,5 @@
 #!/bin/sh
-( exec cargo run -rp server ) &
-wait && exit
-( cd client
-	wasm-pack build --target web
-	exec python -m http.server ) &
+./build
+( exec target/release/server ) &
+( cd client && exec python -m http.server ) &
 wait
