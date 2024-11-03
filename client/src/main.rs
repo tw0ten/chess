@@ -1,4 +1,3 @@
-use common::*;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -15,6 +14,5 @@ extern "C" {}
 #[wasm_bindgen(start)]
 fn main() -> Result<(), JsValue> {
     log("#[wasm_bindgen(start)]");
-    common::main();
     Ok(())
 }
