@@ -2,8 +2,6 @@ use std::fmt;
 
 pub const BOARD_SIZE: usize = 8;
 
-pub type Player = bool;
-
 pub enum Kind {
 	King,
 	Queen,
@@ -11,6 +9,32 @@ pub enum Kind {
 	Elephant,
 	Horse,
 	Pawn,
+}
+
+pub struct Piece {
+	pub kind: Kind,
+	pub player: bool,
+}
+
+pub struct Board {
+	pub pieces: [[Option<Piece>; BOARD_SIZE]; BOARD_SIZE],
+	pub player: bool,
+	pub idle_moves: usize,
+	pub enpassant: Option<usize>,
+}
+
+pub struct Player {
+	pub castle: Option<bool>,
+}
+
+pub struct Square {
+	pub x: usize,
+	pub y: usize,
+}
+
+pub struct Move {
+	pub from: Square,
+	pub to: Square,
 }
 
 impl fmt::Display for Kind {
@@ -30,11 +54,6 @@ impl fmt::Display for Kind {
 	}
 }
 
-pub struct Piece {
-	pub kind: Kind,
-	pub player: Player,
-}
-
 impl fmt::Display for Piece {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		let i = self.kind.to_string();
@@ -48,12 +67,6 @@ impl fmt::Display for Piece {
 			}
 		)
 	}
-}
-
-pub struct Board {
-	pub pieces: [[Option<Piece>; BOARD_SIZE]; BOARD_SIZE],
-	pub player: Player,
-	pub idle_moves: usize,
 }
 
 impl fmt::Display for Board {
@@ -73,11 +86,6 @@ impl fmt::Display for Board {
 	}
 }
 
-pub struct Square {
-	pub x: usize,
-	pub y: usize,
-}
-
 impl Square {
 	pub fn new(x: usize, y: usize) -> Self {
 		Square {
@@ -85,9 +93,4 @@ impl Square {
 			y: if y < BOARD_SIZE { y } else { BOARD_SIZE - 1 },
 		}
 	}
-}
-
-pub struct Move {
-	pub from: Square,
-	pub to: Square,
 }

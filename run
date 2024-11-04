@@ -1,5 +1,5 @@
 #!/bin/sh
 ./build
 ( exec target/release/server ) &
-( cd client && exec python -m http.server ) &
+( cd client/web && exec python -m http.server ) &
 wait

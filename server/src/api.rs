@@ -1,7 +1,11 @@
 use crate::*;
-use actix_web::*;
-use std::sync::Arc;
-use std::{collections::HashMap, sync::Mutex};
+use rand::random;
+use std::{
+	collections::HashMap,
+	sync::{Arc, Mutex},
+};
+
+pub const ADDRESS: (&str, u16) = ("127.0.0.1", 8080);
 
 pub struct AppState {
 	sessions: Mutex<HashMap<String, Session>>,
@@ -23,19 +27,19 @@ async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Respo
 			return HttpResponse::Conflict().body("ongoing");
 		}
 
-		session.white = Some(rand::random::<usize>());
+		session.white = Some(random());
 		return HttpResponse::Ok().body(format!(
-			"joined.\ntoken:{}\ngame state:{}",
+			"token:{}\ngame state:\n{}",
 			session.white.unwrap(),
 			session.board
 		));
 	}
 
-	let session = Session::new(rand::random::<usize>());
+	let session = Session::new(random());
 	state.insert(n.clone(), session);
 	let session = state.get(&n).unwrap();
 	HttpResponse::Ok().body(format!(
-		"created.\ntoken:{}\ngame state:{}",
+		"token:{}\ngame state:\n{}",
 		session.black, session.board
 	))
 }
@@ -55,11 +59,17 @@ async fn send(
 	if let Some(token) = token {
 		let mut state = state.sessions.lock().unwrap();
 		if let Some(session) = state.get_mut(&path.into_inner()) {
-			// if current player token = provided token, make req.move
-			return HttpResponse::Ok();
+			if match session.board.player {
+				true => session.white.unwrap(),
+				_ => session.black,
+			} != token
+			{
+				return HttpResponse::Unauthorized();
+			}
+			// process move
 		}
-		return HttpResponse::Unauthorized();
 	}
+
 	HttpResponse::BadRequest()
 }
 
@@ -68,8 +78,8 @@ async fn api() -> impl Responder {
 	HttpResponse::Ok().body("ok")
 }
 
-#[get("")]
+#[get("/")]
 async fn client() -> impl Responder {
-	// provide own ip as argument
-	web::Redirect::to("https://tw0ten.github.io/chess?s=127.0.0.1").permanent()
+	let (ip, port) = ADDRESS;
+	web::Redirect::to(format!("https://tw0ten.github.io/chess?s={}:{}", ip, port)).permanent()
 }

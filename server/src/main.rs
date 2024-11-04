@@ -1,8 +1,7 @@
-use common::def::*;
-use std::usize;
 mod api;
 use actix_web::*;
 use api::*;
+use common::def::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -11,9 +10,9 @@ async fn main() -> std::io::Result<()> {
 		App::new()
 			.app_data(web::Data::from(state.clone()))
 			.service(client)
-			.service(web::scope("/api").service(api).service(name).service(send))
+			.service(web::scope("api").service(api).service(name).service(send))
 	})
-	.bind(("127.0.0.1", 8080))?
+	.bind(ADDRESS)?
 	.run()
 	.await
 }
@@ -28,7 +27,7 @@ struct Session {
 impl Session {
 	fn board() -> Board {
 		const EMPTY: [Option<Piece>; BOARD_SIZE] = [const { None }; BOARD_SIZE];
-		fn line(player: Player) -> [Option<Piece>; BOARD_SIZE] {
+		fn line(player: bool) -> [Option<Piece>; BOARD_SIZE] {
 			let piece = |kind: Kind| Some(Piece { kind, player });
 			[
 				piece(Kind::Tower),
@@ -65,6 +64,7 @@ impl Session {
 			],
 			player: true,
 			idle_moves: 0,
+			enpassant: None,
 		}
 	}
 
