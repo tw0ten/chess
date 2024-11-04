@@ -25,54 +25,11 @@ struct Session {
 }
 
 impl Session {
-	fn board() -> Board {
-		const EMPTY: [Option<Piece>; BOARD_SIZE] = [const { None }; BOARD_SIZE];
-		fn line(player: bool) -> [Option<Piece>; BOARD_SIZE] {
-			let piece = |kind: Kind| Some(Piece { kind, player });
-			[
-				piece(Kind::Tower),
-				piece(Kind::Horse),
-				piece(Kind::Elephant),
-				piece(Kind::Queen),
-				piece(Kind::King),
-				piece(Kind::Elephant),
-				piece(Kind::Horse),
-				piece(Kind::Tower),
-			]
-		}
-
-		Board {
-			pieces: [
-				line(false),
-				[const {
-					Some(Piece {
-						kind: Kind::Pawn,
-						player: false,
-					})
-				}; BOARD_SIZE],
-				EMPTY,
-				EMPTY,
-				EMPTY,
-				EMPTY,
-				[const {
-					Some(Piece {
-						kind: Kind::Pawn,
-						player: true,
-					})
-				}; BOARD_SIZE],
-				line(true),
-			],
-			player: true,
-			idle_moves: 0,
-			enpassant: None,
-		}
-	}
-
 	pub fn new(token: usize) -> Self {
 		Session {
 			white: None,
 			black: token,
-			board: Self::board(),
+			board: Board::default(),
 			moves: vec![],
 		}
 	}

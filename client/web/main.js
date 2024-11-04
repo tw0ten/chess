@@ -21,5 +21,5 @@
 		return await response.text();
 	};
 
-	import("./wasm/client.js").then((m) => m.default());
+	import("./wasm-pack/client.js").then((m) => m.default());
 })();

@@ -24,7 +24,7 @@ async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Respo
 
 	if let Some(session) = state.get_mut(&n) {
 		if session.white.is_some() {
-			return HttpResponse::Conflict().body("ongoing");
+			return HttpResponse::Conflict().finish();
 		}
 
 		session.white = Some(random());
@@ -59,9 +59,9 @@ async fn send(
 	if let Some(token) = token {
 		let mut state = state.sessions.lock().unwrap();
 		if let Some(session) = state.get_mut(&path.into_inner()) {
-			if match session.board.player {
-				true => session.white.unwrap(),
-				_ => session.black,
+			if match session.board.curr_move {
+				Color::White => session.white.unwrap(),
+				Color::Black => session.black,
 			} != token
 			{
 				return HttpResponse::Unauthorized();

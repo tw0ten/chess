@@ -7,5 +7,6 @@ cargo build \
 
 cd client
 wasm-pack build \
-	-d web/wasm \
+	-d web/wasm-pack \
 	-t web --no-typescript --no-pack
+rm web/wasm-pack/.gitignore
