@@ -1,12 +1,11 @@
 #!/bin/sh
-set -e
+cd() { command cd "$@" || exit; }
 
-cargo build \
-	-r \
-	-p server
+( cd server
+	cargo build \
+		--release )
 
-cd client
-wasm-pack build \
-	-d web/wasm-pack \
-	-t web --no-typescript --no-pack
-rm web/wasm-pack/.gitignore
+( cd client
+	wasm-pack build \
+		-d web/wasm-pack \
+		-t web --no-typescript --no-pack )

@@ -1,3 +1,5 @@
+use common::*;
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

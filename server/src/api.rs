@@ -1,4 +1,5 @@
 use crate::*;
+
 use rand::random;
 use std::{
 	collections::HashMap,
@@ -7,41 +8,48 @@ use std::{
 
 pub const ADDRESS: (&str, u16) = ("127.0.0.1", 8080);
 
-pub struct AppState {
-	sessions: Mutex<HashMap<String, Session>>,
-}
-
 pub fn app_state() -> Arc<AppState> {
 	Arc::new(AppState {
 		sessions: Mutex::new(HashMap::new()),
 	})
 }
 
+pub struct AppState {
+	sessions: Mutex<HashMap<String, Session>>,
+}
+
 #[get("!/{name}")]
 async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Responder {
-	let mut state = state.sessions.lock().unwrap();
-	let n = path.into_inner();
+	if let Some(mut state) = state.sessions.lock().ok() {
+		let n = path.into_inner();
 
-	if let Some(session) = state.get_mut(&n) {
-		if session.white.is_some() {
-			return HttpResponse::Conflict().finish();
+		if let Some(session) = state.get_mut(&n) {
+			if !session.expired() {
+				if session.white.is_some() {
+					return HttpResponse::Conflict().finish();
+				}
+
+				session.white = Some(random());
+				session.expire(Duration::from_secs(90));
+				return HttpResponse::Ok().body(format!(
+					"token:{}\ngame state:\n{}",
+					session.white.unwrap(),
+					session.board
+				));
+			}
 		}
 
-		session.white = Some(random());
-		return HttpResponse::Ok().body(format!(
+		let mut session = Session::new(random());
+		session.expire(Duration::from_secs(90));
+		state.insert(n.clone(), session);
+		let session = state.get(&n).unwrap();
+		HttpResponse::Ok().body(format!(
 			"token:{}\ngame state:\n{}",
-			session.white.unwrap(),
-			session.board
-		));
+			session.black, session.board
+		))
+	} else {
+		HttpResponse::Locked().finish()
 	}
-
-	let session = Session::new(random());
-	state.insert(n.clone(), session);
-	let session = state.get(&n).unwrap();
-	HttpResponse::Ok().body(format!(
-		"token:{}\ngame state:\n{}",
-		session.black, session.board
-	))
 }
 
 #[post("!/{name}")]
@@ -53,20 +61,30 @@ async fn send(
 	let token = req
 		.headers()
 		.get(http::header::AUTHORIZATION)
-		.and_then(|value| value.to_str().ok())
-		.and_then(|value| value.parse::<usize>().ok());
+		.and_then(|v| v.to_str().ok())
+		.and_then(|v| v.parse::<usize>().ok());
 
 	if let Some(token) = token {
-		let mut state = state.sessions.lock().unwrap();
-		if let Some(session) = state.get_mut(&path.into_inner()) {
-			if match session.board.curr_move {
-				Color::White => session.white.unwrap(),
-				Color::Black => session.black,
-			} != token
-			{
-				return HttpResponse::Unauthorized();
+		if let Some(mut state) = state.sessions.lock().ok() {
+			let n = path.into_inner();
+			if let Some(session) = state.get_mut(&n) {
+				if session.expired() {
+					state.remove(&n);
+					return HttpResponse::Gone();
+				}
+				if session.white.is_some() {
+					if match session.board.curr_move {
+						Color::Black => session.black,
+						Color::White => session.white.unwrap(),
+					} != token
+					{
+						return HttpResponse::Unauthorized();
+					}
+					//if session.board.move() {
+					session.expire(Duration::from_secs(90));
+					return HttpResponse::Ok();
+				}
 			}
-			// process move
 		}
 	}
 

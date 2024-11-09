@@ -1,7 +1,7 @@
-(() => {
+(async () => {
 	const url = `${
 		new URLSearchParams(document.location.search).get("s") || ""
-	}/api/!`;
+	}/api`;
 
 	console.log(`server: ${url}`);
 
@@ -14,12 +14,15 @@
 	const post = async (i, h, b) => {
 		const response = await fetch(`${url}/${i}`, {
 			method: "POST",
-			headers: JSON.parse(h),
+			headers: h,
 			body: b,
 		});
 		if (!response.ok) return;
 		return await response.text();
 	};
 
-	import("./wasm-pack/client.js").then((m) => m.default());
+	await import("./wasm-pack/client.js").then((m) => m.default());
+	const g = (await get("!/LULE")).split("\n")[0].split(":")[1];
+	const l = await post("!/LULE", { "Authorization": g }, "HIIIIIII oWo");
+	console.log(l);
 })();

@@ -1,5 +1,4 @@
 pub mod def;
-use std::usize;
 
 use def::*;
 

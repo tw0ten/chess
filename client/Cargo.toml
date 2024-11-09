@@ -1,11 +1,13 @@
 [package]
 name = "client"
 edition = "2021"
+
 autobins = false
 
 [dependencies]
-wasm-bindgen = "*"
 common = { path = "../common" }
+
+wasm-bindgen = "*"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
