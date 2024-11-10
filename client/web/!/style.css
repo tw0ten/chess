@@ -1,0 +1,51 @@
+header {
+	height: 5em;
+	display: flex;
+}
+
+footer>a {
+	margin: 0 0.5rem;
+}
+
+main {
+	height: 100%;
+}
+
+#board {
+	width: 25em;
+	height: 25em;
+	display: grid;
+	grid-template-columns: repeat(9, 1fr);
+	grid-template-rows: repeat(9, 1fr);
+	gap: 0.25em;
+}
+
+#board>button {
+	font-family: var(--font);
+	font-size: 1em;
+}
+
+#board>button:nth-child(odd) {
+	background-color: white;
+	color: black;
+}
+
+#board>button:nth-child(even) {
+	background-color: black;
+	color: white;
+}
+
+#board>button:hover {
+	background-color: var(--acc);
+}
+
+#board>* {
+	display: flex;
+	place-items: center;
+	justify-content: center;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}

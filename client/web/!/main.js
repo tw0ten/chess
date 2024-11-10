@@ -23,7 +23,7 @@
 
 	const game = "gametiltlte";
 
-	await import("./wasm-pack/client.js").then((m) => m.default());
+	await import("../wasm-pack/client.js").then((m) => m.default());
 	const g = (await get(`!/${game}`)).split("\n");
 	const token = g[0];
 	const b = g[1];
