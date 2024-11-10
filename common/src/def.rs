@@ -93,24 +93,11 @@ impl fmt::Display for Piece {
 
 impl fmt::Display for Board {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(
-			f,
-			"{}",
-			match self.curr_move {
-				Color::White => 'w',
-				Color::Black => 'B',
-			}
-		)?;
 		for i in 0..BOARD_SIZE {
-			write!(f, " {}", i)?
-		}
-		for i in 0..BOARD_SIZE {
-			writeln!(f)?;
-			write!(f, "{}", BOARD_SIZE - i)?;
 			for cell in &self.pieces[i] {
 				match cell {
-					Some(piece) => write!(f, " {}", piece)?,
-					None => write!(f, "  ")?,
+					Some(piece) => write!(f, "{}", piece)?,
+					None => write!(f, " ")?,
 				}
 			}
 		}

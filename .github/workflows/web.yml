@@ -2,7 +2,7 @@ name: web
 
 on:
   push:
-    branches: []
+    branches: ["main"]
 
 permissions:
   contents: read

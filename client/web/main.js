@@ -21,9 +21,19 @@
 		return await response.text();
 	};
 
+	const game = "gametiltlte";
+
 	await import("./wasm-pack/client.js").then((m) => m.default());
-	const g = (await get("!/LULE")).split("\n")[0].split(":")[1];
+	const g = (await get(`!/${game}`)).split("\n");
+	const token = g[0];
+	const b = g[1];
+	for (let i = 0; i < Math.sqrt(b.length); i++) {
+		for (let j = 0; j < Math.sqrt(b.length); j++) {
+			document.getElementById(`${i}:${j}`).innerText =
+				b[i * Math.sqrt(b.length) + j];
+		}
+	}
 	console.log(g);
-	const l = await post("!/LULE", { "Authorization": g }, "HIIIIIII oWo");
+	const l = await post(`!/${game}`, { "Authorization": token }, "3:6-3:4");
 	console.log(l);
 })();

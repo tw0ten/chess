@@ -32,7 +32,7 @@ async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Respo
 				session.white = Some(random());
 				session.expire(Duration::from_secs(90));
 				return HttpResponse::Ok().body(format!(
-					"token:{}\ngame state:\n{}",
+					"{}\n{}",
 					session.white.unwrap(),
 					session.board
 				));
@@ -44,7 +44,7 @@ async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Respo
 		state.insert(n.clone(), session);
 		let session = state.get(&n).unwrap();
 		HttpResponse::Ok().body(format!(
-			"token:{}\ngame state:\n{}",
+			"{}\n{}",
 			session.black, session.board
 		))
 	} else {

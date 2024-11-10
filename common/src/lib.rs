@@ -26,9 +26,7 @@ impl Board {
 			}
 
 			return match piece.kind {
-				Kind::King => {
-					(diff(from.x, to.x) == 1 || diff(from.y, to.y) == 1) && todo!("not check")
-				}
+				Kind::King => (diff(from.x, to.x) == 1 || diff(from.y, to.y) == 1) && false,
 				Kind::Pawn => {
 					if capture.is_some() {
 						diff(to.x, from.x) == 1

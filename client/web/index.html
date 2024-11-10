@@ -1,12 +1,97 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<title>chess</title>
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="/!/styles/style.css">
+		<link rel="stylesheet" href="/!/styles/fonts.css">
 		<script src="main.js" defer type="module"></script>
-		<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Chess_Piece_in_the_Form_of_a_Warder_%28Rook%29_or_Pawn_MET_DP314995.jpg/640px-Chess_Piece_in_the_Form_of_a_Warder_%28Rook%29_or_Pawn_MET_DP314995.jpg">
+		<link rel="icon" href="!/icon.png">
 	</head>
-	<body>
-		<canvas></canvas>
+	<body style="display: flex; flex-direction: column">
+		<header style="height: 5em">
+			<img src="!/icon.png">
+			<style>
+				header {
+					display: flex;
+				}
+			</style>
+		</header>
+		<main style="height: 100%">
+			<div id="board">
+				<div id="bi">w</div>
+			</div>
+			<script>
+				const board = document.getElementById("board");
+				for(let i = 0; i<8; i++) {
+					const e = document.createElement("label");
+					e.id = `${i}:`
+					e.innerText = i;
+					board.appendChild(e);
+				}
+				for(let i = 0; i<8; i++) {
+					const e = document.createElement("label");
+					e.id = `:${i}`
+					e.innerText = i;
+					board.appendChild(e);
+					for(let j = 0; j<8; j++) {
+						const e = document.createElement("button");
+						e.id=`${i}:${j}`
+						const r = document.getElementById(`:${i}`);
+						const c = document.getElementById(`${j}:`);
+						e.addEventListener("mouseover", () => {
+							r.style.color = "var(--acc)";
+							c.style.color = "var(--acc)";
+						});
+						e.addEventListener("mouseout", () => {
+							r.style.color = "";
+							c.style.color = "";
+						});
+						board.appendChild(e);
+					}
+				}
+			</script>
+			<style>
+				#board {
+					width: 25em;
+					height: 25em;
+					display: grid;
+					grid-template-columns: repeat(9, 1fr);
+					grid-template-rows: repeat(9, 1fr);
+					gap: 0.25em;
+				}
+				#board>button{
+					font-family: var(--font);
+					font-size: 1em;
+					border: none;
+				}
+				#board>button:nth-child(odd) {
+					background-color: white;
+					color: black;
+				}
+				#board>button:nth-child(even) {
+					background-color: black;
+					color: white;
+				}
+				#board>button:hover {
+					background-color: var(--acc);
+				}
+				#board>* {
+					display: flex;
+					place-items: center;
+					justify-content: center;
+				}
+			</style>
+		</main>
+		<footer>
+			<a href="/">home</a>
+			<a href="https://github.com/tw0ten/chess">source code</a>
+			<a href="help">help</a>
+			<style>
+				footer>a {
+					margin: 0 0.5rem;
+				}
+			</style>
+		</footer>
 	</body>
 </html>
