@@ -2,11 +2,17 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		<title>chess</title>
+		<link rel="icon" href="!/icon.png">
+
 		<link rel="stylesheet" href="/!/style.css">
 		<link rel="stylesheet" href="!/style.css">
+
+		<script src="/!/script/notify.js"></script>
+		<script src="/!/script/fetch.js"></script>
 		<script src="!/main.js" defer type="module"></script>
-		<link rel="icon" href="!/icon.png">
 	</head>
 	<body>
 		<header>
@@ -15,40 +21,10 @@
 		</header>
 		<main>
 			<div id="board">
-				<div id="bi">w</div>
 			</div>
 			<div id="info">
+				moves
 			</div>
-			<script>
-				const board = document.getElementById("board");
-				for(let i = 0; i<8; i++) {
-					const e = document.createElement("label");
-					e.id = `${i}:`
-					e.innerText = i;
-					board.appendChild(e);
-				}
-				for(let i = 0; i<8; i++) {
-					const e = document.createElement("label");
-					e.id = `:${i}`
-					e.innerText = i;
-					board.appendChild(e);
-					for(let j = 0; j<8; j++) {
-						const e = document.createElement("button");
-						e.id=`${i}:${j}`
-						const r = document.getElementById(`:${i}`);
-						const c = document.getElementById(`${j}:`);
-						e.addEventListener("mouseover", () => {
-							r.style.color = "var(--acc)";
-							c.style.color = "var(--acc)";
-						});
-						e.addEventListener("mouseout", () => {
-							r.style.color = "";
-							c.style.color = "";
-						});
-						board.appendChild(e);
-					}
-				}
-			</script>
 		</main>
 		<footer>
 			<a href="/">home</a>
