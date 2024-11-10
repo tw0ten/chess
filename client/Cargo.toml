@@ -10,5 +10,5 @@ common = { path = "../common" }
 wasm-bindgen = "*"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
 path = "src/main.rs"
+crate-type = ["cdylib", "rlib"]

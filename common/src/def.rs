@@ -26,9 +26,9 @@ pub struct Piece {
 }
 
 pub enum Castle {
-    Both,
-    Queen,
-    King,
+	Both,
+	Queen,
+	King,
 }
 
 #[derive(PartialEq)]
@@ -52,7 +52,7 @@ pub struct Move {
 }
 
 impl Square {
-	pub fn new(x: usize, y: usize) -> Self {
+	pub const fn new(x: usize, y: usize) -> Self {
 		Square {
 			x: if x < BOARD_SIZE { x } else { 0 },
 			y: if y < BOARD_SIZE { y } else { 0 },
@@ -95,20 +95,23 @@ impl fmt::Display for Board {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		write!(
 			f,
-			"{} 1 2 3 4 5 6 7 8",
+			"{}",
 			match self.curr_move {
 				Color::White => 'w',
 				Color::Black => 'B',
 			}
 		)?;
 		for i in 0..BOARD_SIZE {
+			write!(f, " {}", i)?
+		}
+		for i in 0..BOARD_SIZE {
 			writeln!(f)?;
-			write!(f, "{}", 8 - i)?;
+			write!(f, "{}", BOARD_SIZE - i)?;
 			for cell in &self.pieces[i] {
 				match cell {
 					Some(piece) => write!(f, " {}", piece)?,
 					None => write!(f, "  ")?,
-				};
+				}
 			}
 		}
 		Ok(())

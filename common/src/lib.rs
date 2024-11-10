@@ -15,40 +15,79 @@ impl Board {
 		&self.pieces[square.x][square.y]
 	}
 
-	pub fn canmove(&self, from: Square, to: Square) -> bool {
+	pub fn can_move(&self, from: Square, to: Square) -> bool {
 		let piece = self.at(&from);
 		if let Some(piece) = piece {
-			if let Some(capture) = self.at(&to) {
-				if piece.color == capture.color {
+			let capture = self.at(&to);
+			if let Some(capture) = capture {
+				if capture.color == piece.color {
 					return false;
 				}
 			}
 
-			// this will be cancer
 			return match piece.kind {
 				Kind::King => {
 					(diff(from.x, to.x) == 1 || diff(from.y, to.y) == 1) && todo!("not check")
 				}
-				Kind::Pawn => match piece.color {
-					Color::White => to.y - from.y == 1 || (from.y == 1 && to.y == from.y + 2),
-					Color::Black => false,
-				},
-				_ => false,
+				Kind::Pawn => {
+					if capture.is_some() {
+						diff(to.x, from.x) == 1
+							&& match piece.color {
+								Color::White => to.y - from.y == 1,
+								Color::Black => from.y - to.y == 1,
+							}
+					} else {
+						from.x == to.x
+							&& match piece.color {
+								Color::White => {
+									to.y - from.y == 1 || (from.y == 1 && to.y == from.y + 2)
+								}
+								Color::Black => {
+									from.y - to.y == 1 || (from.y == 6 && to.y == from.y - 2)
+								}
+							}
+					}
+				}
+				Kind::Horse => {
+					(diff(from.x, to.x) == 1 && diff(from.y, to.y) == 2)
+						|| (diff(from.x, to.x) == 2 && diff(from.y, to.y) == 1)
+				}
+				Kind::Tower => (from.y == to.y) ^ (from.x == to.x),
+				Kind::Elephant => diff(from.x, to.x) == diff(from.y, to.y),
+				Kind::Queen => {
+					(from.y == to.y) ^ (from.x == to.x) || diff(from.x, to.x) == diff(from.y, to.y)
+				}
 			};
 		}
 		false
 	}
 
 	pub fn legal_moves(&self) -> Vec<Move> {
-		vec![]
+		let mut v = vec![];
+		for x in 0..BOARD_SIZE {
+			for y in 0..BOARD_SIZE {
+				if let Some(p) = &self.at(&Square { x, y }) {
+					if p.color == self.curr_move {
+						for x1 in 0..BOARD_SIZE {
+							for y1 in 0..BOARD_SIZE {
+								if self.can_move(Square { x, y }, Square { x: x1, y: y1 }) {
+									v.push(Move {
+										from: Square { x, y },
+										to: Square { x: x1, y: y1 },
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		v
 	}
 }
 
-// i want to leave it abstract enough to introduce new pieces.
-// maybe even increase board size?
 impl Board {
-	pub fn default() -> Board {
-		const EMPTY: [Option<Piece>; BOARD_SIZE] = [const { None }; BOARD_SIZE];
+	pub const fn default() -> Board {
 		Board {
 			pieces: [
 				[
@@ -91,10 +130,10 @@ impl Board {
 						color: Color::Black,
 					})
 				}; BOARD_SIZE],
-				EMPTY,
-				EMPTY,
-				EMPTY,
-				EMPTY,
+				[const { None }; BOARD_SIZE],
+				[const { None }; BOARD_SIZE],
+				[const { None }; BOARD_SIZE],
+				[const { None }; BOARD_SIZE],
 				[const {
 					Some(Piece {
 						kind: Kind::Pawn,

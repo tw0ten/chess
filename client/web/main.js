@@ -23,6 +23,7 @@
 
 	await import("./wasm-pack/client.js").then((m) => m.default());
 	const g = (await get("!/LULE")).split("\n")[0].split(":")[1];
+	console.log(g);
 	const l = await post("!/LULE", { "Authorization": g }, "HIIIIIII oWo");
 	console.log(l);
 })();
