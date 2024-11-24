@@ -8,6 +8,5 @@ cd() { command cd "$@" || exit; }
 ( cd client
 	wasm-pack build \
 		-t web \
-		-d web/wasm-pack \
-		--no-pack --no-typescript
-	rm web/wasm-pack/.gitignore )
+		--no-pack --no-typescript \
+		-d web/wasm-pack )
