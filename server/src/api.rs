@@ -18,7 +18,7 @@ pub struct AppState {
 	sessions: Mutex<HashMap<String, Session>>,
 }
 
-#[get("!/{name}")]
+#[get("{name}")]
 async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Responder {
 	if let Some(mut state) = state.sessions.lock().ok() {
 		let n = path.into_inner();
@@ -43,16 +43,13 @@ async fn name(path: web::Path<String>, state: web::Data<AppState>) -> impl Respo
 		session.expire(Duration::from_secs(90));
 		state.insert(n.clone(), session);
 		let session = state.get(&n).unwrap();
-		HttpResponse::Ok().body(format!(
-			"{}\n{}",
-			session.black, session.board
-		))
+		HttpResponse::Ok().body(format!("{}\n{}", session.black, session.board))
 	} else {
 		HttpResponse::Locked().finish()
 	}
 }
 
-#[post("!/{name}")]
+#[post("{name}")]
 async fn send(
 	path: web::Path<String>,
 	req: HttpRequest,
@@ -91,9 +88,9 @@ async fn send(
 	HttpResponse::BadRequest()
 }
 
-#[get("")]
+#[get("/")]
 async fn api() -> impl Responder {
-	HttpResponse::Ok().body("ok")
+	HttpResponse::Ok().finish()
 }
 
 #[get("/")]

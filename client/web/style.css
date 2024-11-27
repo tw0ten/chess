@@ -1,19 +1,31 @@
-header {
-	height: 5em;
-	display: flex;
-}
-
 main {
 	height: 100%;
 }
 
-#board {
-	width: 25em;
+main > div {
+	display: flex;
+	flex-direction: row;
 	height: 25em;
+}
+
+#board {
+	height: 100%;
+	aspect-ratio: 1/1;
 	display: grid;
 	grid-template-columns: repeat(9, 1fr);
 	grid-template-rows: repeat(9, 1fr);
 	gap: 0.25em;
+}
+
+#info {
+	padding: 1em;
+	height: 100%;
+}
+
+#timer {
+	background: var(--fgc);
+	height: 2px;
+	margin: 2px;
 }
 
 #board > button {
@@ -22,17 +34,17 @@ main {
 }
 
 #board > button {
-	background-color: white;
+	background: white;
 	color: black;
 }
 
 #board > button:nth-child(even) {
-	background-color: black;
+	background: black;
 	color: white;
 }
 
 #board > button:hover {
-	background-color: var(--acc);
+	background: var(--acc);
 }
 
 #board > * {

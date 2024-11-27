@@ -1,5 +1,5 @@
 #!/bin/sh
-cd() { command cd "$@" || exit; }
+set -e && export SHELLOPTS
 
 ( cd server
 	cargo build \
@@ -9,4 +9,4 @@ cd() { command cd "$@" || exit; }
 	wasm-pack build \
 		-t web \
 		--no-pack --no-typescript \
-		-d web/wasm-pack )
+		-d web/wasm )

@@ -19,7 +19,11 @@ async fn main() -> std::io::Result<()> {
 			)
 			.app_data(web::Data::from(state.clone()))
 			.service(client)
-			.service(web::scope("api").service(api).service(name).service(send))
+			.service(
+				web::scope("api")
+					.service(api)
+					.service(web::scope("*").service(name).service(send)),
+			)
 	})
 	.bind(ADDRESS)?
 	.run()

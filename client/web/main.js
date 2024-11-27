@@ -1,16 +1,16 @@
-(async () => {
+(async (params) => {
 	const e = document.getElementById("board");
 	const url = `${
-		new URLSearchParams(document.location.search).get("s") ||
+		params.get("s") ||
 		"http://localhost:8080"
 	}/api`;
 
 	{
 		const i = notify("loading wasm");
-		await import("../wasm-pack/client.js")
-			.then((e) => {
-				e.default();
-				notify("INF\nloaded client.wasm");
+		await import("./wasm/client.js")
+			.then(async (e) => {
+				await e.default();
+				return notify("INF\nloaded client.wasm");
 			}).catch((e) => {
 				notify(
 					`ERR\n#failed to load client.wasm\n${e}\n...`,
@@ -20,9 +20,7 @@
 					},
 				);
 				throw e;
-			}).finally((_) => {
-				i.remove();
-			});
+			}).finally(() => i.remove());
 	}
 
 	const updateboard = (board) => {
@@ -49,30 +47,26 @@
 		};
 
 		e.innerHTML = null;
-		e.appendChild((() => {
-			const e = document.createElement("div");
+		e.appendChild(((e) => {
 			e.innerText = "w";
 			e.id = "tl";
 			return e;
-		})());
+		})(document.createElement("div")));
 		for (let i = 0; i < session.board.w; i++) {
-			e.appendChild((() => {
-				const e = document.createElement("label");
+			e.appendChild(((e) => {
 				e.id = `${i}:`;
 				e.innerText = i;
 				return e;
-			})());
+			})(document.createElement("label")));
 		}
 		for (let i = 0; i < session.board.w; i++) {
-			e.appendChild((() => {
-				const e = document.createElement("label");
+			e.appendChild(((e) => {
 				e.id = `:${i}`;
 				e.innerText = i;
 				return e;
-			})());
+			})(document.createElement("label")));
 			for (let j = 0; j < session.board.w; j++) {
-				e.appendChild((() => {
-					const e = document.createElement("button");
+				e.appendChild(((e) => {
 					e.id = `${i}:${j}`;
 					const r = document.getElementById(`:${i}`);
 					const c = document.getElementById(`${j}:`);
@@ -85,7 +79,7 @@
 						c.style.color = "";
 					});
 					return e;
-				})());
+				})(document.createElement("button")));
 			}
 		}
 
@@ -104,4 +98,4 @@
 	};
 
 	await post(`${url}/!/game`, "", h);
-})();
+})(new URLSearchParams(document.location.search));
