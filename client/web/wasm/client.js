@@ -56,7 +56,7 @@ async function __wbg_load(module, imports) {
 function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
-    imports.wbg.__wbg_log_e719b50a4c8d6829 = function(arg0, arg1) {
+    imports.wbg.__wbg_log_abca85a40fe87dad = function(arg0, arg1) {
         console.log(getStringFromWasm0(arg0, arg1));
     };
     imports.wbg.__wbindgen_init_externref_table = function() {

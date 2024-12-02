@@ -6,7 +6,7 @@ set -e && export SHELLOPTS
 		--release )
 
 ( cd client
-	wasm-pack build \
-		-t web \
-		--no-pack --no-typescript \
+	cargo install wasm-pack --root ../target
+	../target/bin/wasm-pack build \
+		-t web --no-pack --no-typescript \
 		-d web/wasm )
