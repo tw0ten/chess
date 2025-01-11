@@ -1,8 +1,8 @@
 (async (params) => {
 	const e = document.getElementById("board");
 	const url = `${
-		params.get("s") ||
-		"http://localhost:8080"
+		params.get("s") ??
+			"http://localhost:8080"
 	}/api`;
 
 	{

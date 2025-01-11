@@ -2,15 +2,25 @@ use std::fmt;
 
 pub const BOARD_SIZE: usize = 8;
 
-pub struct Board {
-	pub pieces: [[Option<Piece>; BOARD_SIZE]; BOARD_SIZE],
-	pub curr_move: Color,
-	pub white: Player,
-	pub black: Player,
+pub struct Rules {
 	pub idle_moves: usize,
 	pub enpassant: Option<usize>,
+	pub castle: [Option<Castle>; 2],
 }
 
+pub enum Castle {
+	Both,
+	Queen,
+	King,
+}
+
+pub struct Board {
+	pub pieces: [[Option<Piece>; BOARD_SIZE]; BOARD_SIZE],
+	pub moves: Vec<usize>,
+	pub rules: Rules,
+}
+
+#[derive(Clone)]
 pub enum Kind {
 	King,
 	Queen,
@@ -20,27 +30,15 @@ pub enum Kind {
 	Pawn,
 }
 
+#[derive(Clone)]
 pub struct Piece {
 	pub kind: Kind,
 	pub color: Color,
 }
 
-pub enum Castle {
-	Both,
-	Queen,
-	King,
-}
+pub type Color = bool;
 
 #[derive(PartialEq)]
-pub enum Color {
-	White,
-	Black,
-}
-
-pub struct Player {
-	pub castle: Option<Castle>,
-}
-
 pub struct Square {
 	pub x: usize,
 	pub y: usize,
@@ -84,8 +82,8 @@ impl fmt::Display for Piece {
 			f,
 			"{}",
 			match self.color {
-				Color::White => i.to_lowercase(),
-				Color::Black => i.to_uppercase(),
+				true => i.to_lowercase(),
+				false => i.to_uppercase(),
 			}
 		)
 	}

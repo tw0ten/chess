@@ -34,7 +34,7 @@ struct Session {
 	white: Option<usize>,
 	black: usize,
 	board: Board,
-	moves: Vec<usize>,
+	moves: Vec<usize>, // move to board?
 	expire: Instant,
 }
 

@@ -70,9 +70,9 @@ async fn send(
 					return HttpResponse::Gone();
 				}
 				if session.white.is_some() {
-					if match session.board.curr_move {
-						Color::Black => session.black,
-						Color::White => session.white.unwrap(),
+					if match session.board.player {
+						false => session.black,
+						true => session.white.unwrap(),
 					} != token
 					{
 						return HttpResponse::Unauthorized();
