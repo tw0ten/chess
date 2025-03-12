@@ -1,3 +1,6 @@
+import { get, post } from "/*/script/fetch.js";
+import notify from "/*/script/notify.js";
+
 (async (params) => {
 	const e = document.getElementById("board");
 	const url = `${
